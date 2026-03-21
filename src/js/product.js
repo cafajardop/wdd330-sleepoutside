@@ -1,9 +1,9 @@
-import { getLocalStorage, setLocalStorage, loadHeaderFooter } from './utils.mjs';
+import { getLocalStorage, setLocalStorage, loadHeaderFooter, getParam } from './utils.mjs';
 import ProductData from './ProductData.mjs';
 
 loadHeaderFooter();
 
-const dataSource = new ProductData('tents');
+const dataSource = new ProductData();
 
 function productTemplate(product) {
   return `<section class="product-detail">
@@ -11,7 +11,7 @@ function productTemplate(product) {
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img
       class="divider"
-      src="${product.Image}"
+      src="${product.Images.PrimaryLarge}"
       alt="${product.Name}"
     />
     <p class="product-card__price">$${product.FinalPrice}</p>
@@ -35,8 +35,7 @@ async function addToCartHandler(e) {
 }
 
 async function renderProductDetail() {
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get('product');
+  const productId = getParam('product');
   const product = await dataSource.findProductById(productId);
   document.querySelector('main').innerHTML = productTemplate(product);
   document.getElementById('addToCart').addEventListener('click', addToCartHandler);
